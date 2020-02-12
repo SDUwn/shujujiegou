@@ -7,6 +7,7 @@
 #include<qfiledialog.h>
 #include<qdesktopservices.h>
 #include"frame3.h"
+#include<QAxObject>
 
 frame1::frame1(QWidget *parent)
     : QMainWindow(parent)
@@ -45,8 +46,9 @@ void frame1::on_start_clicked()
     max_xf=ui->max_xf->text().toInt();
     t_V=0;
     for(int i=0;i<ui->tableWidget->rowCount();i++){
-        for(int j=0;j<ui->tableWidget->rowCount();j++){
+        for(int j=0;j<ui->tableWidget->columnCount();j++){
             if(ui->tableWidget->item(i,j)!=NULL){
+                qDebug()<<ui->tableWidget->item(i,j)->text();
                 t_V++;
             }
         }
@@ -105,4 +107,72 @@ void frame1::on_commandLinkButton_2_clicked()
      if(file.exists()){
          QDesktopServices::openUrl(QUrl::fromLocalFile(file_name));
      }
+}
+
+void frame1::on_commandLinkButton_3_clicked()
+{
+
+        QAxObject* excel = new QAxObject("Excel.Application");
+
+        excel->setProperty("Visible", false);
+
+        QAxObject* workbooks = excel->querySubObject("WorkBooks");
+
+        QString file_name = QFileDialog::getOpenFileName(this,
+                tr("Open File"),
+                "",
+                "",
+                0);
+
+        workbooks->dynamicCall("Open (const QString&)", file_name); //filename
+
+        QAxObject* workbook = excel->querySubObject("ActiveWorkBook");
+
+       // QAxObject* worksheets = workbook->querySubObject("WorkSheets");
+
+        QAxObject* worksheet = workbook->querySubObject("Worksheets(int)", 1); //worksheet number
+
+        QAxObject* usedrange = worksheet->querySubObject("UsedRange");
+
+        QAxObject* rows = usedrange->querySubObject("Rows");
+
+        QAxObject* columns = usedrange->querySubObject("Columns");
+
+ //       int intRowStart = usedrange->property("Row").toInt();
+
+ //       int intColStart = usedrange->property("Column").toInt();
+
+        int intCols = columns->property("Count").toInt();
+
+        int intRows = rows->property("Count").toInt();
+
+        QAxObject * cell;
+
+        for (int i = 2; i <2 + intRows; i++)
+
+        {
+            for (int j = 1; j < 1 + intCols; j++)
+            {
+                cell = excel->querySubObject("Cells(Int, Int)", i, j );
+                QVariant cellValue = cell->dynamicCall("value");
+               if(cellValue.toString()!="")
+               {
+                QTableWidgetItem *item=new QTableWidgetItem;
+                item->setText(cellValue.toString());
+                ui->tableWidget->setItem(i-2,j-1,item);
+               }
+            }
+
+        }
+
+        excel->setProperty("DisplayAlerts", 0);
+
+        workbook->dynamicCall("Save(void)");
+
+        workbook->dynamicCall("Close (Boolean)", false);
+
+        excel->setProperty("DisplayAlerts",1);
+
+        delete excel;
+        qDebug()<<"导入表格完成！";
 }

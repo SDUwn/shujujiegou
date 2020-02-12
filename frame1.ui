@@ -70,6 +70,9 @@ alternate-background-color: rgb(255, 255, 127);</string>
     </widget>
    </widget>
    <widget class="QTableWidget" name="tableWidget">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -81,9 +84,6 @@ alternate-background-color: rgb(255, 255, 127);</string>
     <property name="styleSheet">
      <string notr="true">font: 75 11pt &quot;微软雅黑&quot;;
 background-color: rgb(255, 255, 127);</string>
-    </property>
-    <property name="alternatingRowColors">
-     <bool>true</bool>
     </property>
     <property name="showGrid">
      <bool>true</bool>
@@ -197,7 +197,7 @@ background-color: rgb(255, 255, 127);</string>
     <property name="geometry">
      <rect>
       <x>380</x>
-      <y>290</y>
+      <y>280</y>
       <width>131</width>
       <height>41</height>
      </rect>
@@ -284,6 +284,22 @@ font: 75 11pt &quot;微软雅黑&quot;;</string>
     </property>
     <property name="text">
      <string>开始排课</string>
+    </property>
+   </widget>
+   <widget class="QCommandLinkButton" name="commandLinkButton_3">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>320</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 127);</string>
+    </property>
+    <property name="text">
+     <string>导入表格</string>
     </property>
    </widget>
   </widget>

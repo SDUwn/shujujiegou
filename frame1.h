@@ -30,6 +30,8 @@ private slots:
 
     void on_commandLinkButton_2_clicked();
 
+    void on_commandLinkButton_3_clicked();
+
 private:
     Ui::frame1 *ui;
 };
